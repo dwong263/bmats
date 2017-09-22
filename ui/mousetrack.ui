@@ -1,0 +1,1273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainWindow</class>
+ <widget class="QWidget" name="mainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1555</width>
+    <height>1000</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>BMATS v0.7</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_8">
+   <item row="3" column="1">
+    <widget class="QGroupBox" name="consoleOutputGroupBox">
+     <property name="minimumSize">
+      <size>
+       <width>600</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Console Output</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QTextBrowser" name="consoleOutputText">
+        <property name="font">
+         <font>
+          <family>Monospace</family>
+         </font>
+        </property>
+        <property name="lineWrapMode">
+         <enum>QTextEdit::NoWrap</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="titleLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Barnes Maze Automatic Tracking Software (BMATS) v0.7&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QLabel" name="authorLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Dickson Wong, Robarts Research Institute, 2016&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" rowspan="2">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="analyzeTab">
+      <attribute name="title">
+       <string>Video Analysis</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="2" column="0" rowspan="4" colspan="7">
+        <widget class="QGroupBox" name="videoAnalysisParametersGroupBox">
+         <property name="title">
+          <string>Video Analysis Parameters</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_16">
+          <item row="2" column="3">
+           <widget class="QGroupBox" name="ekfGroupBox">
+            <property name="title">
+             <string>Extended Kalman Filter</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_19">
+             <item row="0" column="0">
+              <widget class="QLabel" name="KALMAN_UPDATE_PARAM_LABEL">
+               <property name="text">
+                <string>KALMAN_UPDATE_PARAM</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="KALMAN_UPDATE_PARAM_INPUT">
+               <property name="text">
+                <string>15</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QGroupBox" name="cornerDetectionGroupBox">
+            <property name="title">
+             <string>Shi Tomasi Corner Detection (Head/Tail)</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_17">
+             <item row="0" column="2">
+              <widget class="QLineEdit" name="MAX_CORNERS_INPUT">
+               <property name="text">
+                <string>3</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLineEdit" name="MIN_DISTANCE_INPUT">
+               <property name="text">
+                <string>7</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="QUALITY_LEVEL_LABEL">
+               <property name="text">
+                <string>QUALITY_LEVEL</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="MIN_DISTANCE_LABEL">
+               <property name="text">
+                <string>MIN_DISTANCE</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="MAX_CORNERS_LABEL">
+               <property name="text">
+                <string>MAX_CORNERS</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="BLOCK_SIZE_LABEL">
+               <property name="text">
+                <string>BLOCK_SIZE</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLineEdit" name="QUALITY_LEVEL_INPUT">
+               <property name="text">
+                <string>0.1</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QLineEdit" name="BLOCK_SIZE_INPUT">
+               <property name="text">
+                <string>10</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QGroupBox" name="mouseSegmentationGroupBox">
+            <property name="title">
+             <string>Mouse Segmentation</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_18">
+             <item row="0" column="0">
+              <widget class="QLabel" name="HOLE_MASK_FACTOR_LABEL">
+               <property name="text">
+                <string>HOLE_MASK_FACTOR</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="PREV_DIST_LIM_2_LABEL">
+               <property name="text">
+                <string>PREV_DIST_LIM_2</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="PREV_DIST_LIM_1_LABEL">
+               <property name="text">
+                <string>PREV_DIST_LIM_1</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="PREV_DIST_LIM_1_INPUT">
+               <property name="text">
+                <string>20</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="HOLE_MASK_FACTOR_INPUT">
+               <property name="text">
+                <string>2</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLineEdit" name="RESET_THRESH_INPUT">
+               <property name="text">
+                <string>10</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="RESET_THRES_LABEL">
+               <property name="text">
+                <string>RESET_THRESH</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="PREV_DIST_LIM_2_INPUT">
+               <property name="text">
+                <string>210</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QGroupBox" name="holeActivationGroupBox">
+            <property name="title">
+             <string>Hole Activation</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_20">
+             <item row="0" column="0">
+              <widget class="QLabel" name="RANGE_FOR_ACTIVATION_LABEL">
+               <property name="text">
+                <string>RANGE_FOR_ACTIVATION</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="RANGE_FOR_ACTIVATION_INPUT">
+               <property name="text">
+                <string>0.4</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="TARGET_HOLE_ACTIVITY_LABEL">
+               <property name="text">
+                <string>TARGET_HOLE_ACTIVITY</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="TARGET_HOLE_ACTIVITY_INPUT">
+               <property name="text">
+                <string>50</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QGroupBox" name="groupBox_8">
+            <property name="title">
+             <string>Hole Detection</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_22">
+             <item row="0" column="0">
+              <widget class="QLabel" name="MIN_RADIUS_HOLE_LABEL">
+               <property name="text">
+                <string>MIN_RADIUS_HOLE</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="MIN_RADIUS_HOLE_INPUT">
+               <property name="text">
+                <string>10</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="MAX_RADIUS_HOLE_LABEL">
+               <property name="text">
+                <string>MAX_RADIUS_HOLE</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="MAX_RADIUS_HOLE_INPUT">
+               <property name="text">
+                <string>17</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="HOLE_DIAMETER_LABEL">
+               <property name="text">
+                <string>HOLE_DIAMETER [cm]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="HOLE_DIAMETER_INPUT">
+               <property name="text">
+                <string>5</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QGroupBox" name="tableDetectionGroupBox">
+            <property name="title">
+             <string>Table Detection</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_21">
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="DILATE_KERNEL_WIDTH_INPUT">
+               <property name="text">
+                <string>7</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="DILATE_KERNEL_HEIGHT_INPUT">
+               <property name="text">
+                <string>7</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="DILATE_KERNEL_HEIGHT_LABEL">
+               <property name="text">
+                <string>DILATE_KERNEL_HEIGHT</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="DILATE_KERNEL_WIDTH_LABEL">
+               <property name="text">
+                <string>DILATE_KERNEL_WIDTH</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="2" colspan="2">
+           <widget class="QGroupBox" name="blurringKernelGroupBox">
+            <property name="title">
+             <string>Blurring Kernel</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_23">
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="BLUR_KERNEL_WIDTH_INPUT">
+               <property name="text">
+                <string>10</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="BLUR_KERNEL_WIDTH_LABEL">
+               <property name="text">
+                <string>BLUR_KERNEL_WIDTH</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="BLUR_KERNEL_HEIGHT_LABEL">
+               <property name="text">
+                <string>BLUR_KERNEL_HEIGHT</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLineEdit" name="BLUR_KERNEL_HEIGHT_INPUT">
+               <property name="text">
+                <string>10</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="4" column="2" colspan="2">
+           <widget class="QPushButton" name="confirmAnalysisParametersButton">
+            <property name="text">
+             <string>Confirm Video Analysis Parameters</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="7">
+        <widget class="QGroupBox" name="selectTargetGroupBox">
+         <property name="title">
+          <string>Select Target Box</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="specifyTargetBoxLineEdit">
+            <property name="text">
+             <string>1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="specifyTargetBoxLabel">
+            <property name="text">
+             <string>Select Target Box [1-20]</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="specifyTargetBoxButton">
+            <property name="text">
+             <string>Confirm Target Box Selection</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="3">
+           <widget class="QPushButton" name="checkTargetBoxButton">
+            <property name="text">
+             <string>Check Target Box</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="6">
+        <widget class="QGroupBox" name="loadVideoGroupBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>400</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Load Video</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="1" column="0">
+           <widget class="QLineEdit" name="loadVideoFilename"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="loadVideoButton">
+            <property name="text">
+             <string>Load Video</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="6">
+        <widget class="QGroupBox" name="trialInfoGroupBox">
+         <property name="title">
+          <string>Trial Information</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="2" column="0">
+           <widget class="QLabel" name="dayLabel">
+            <property name="text">
+             <string>Day</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="trialLabel">
+            <property name="text">
+             <string>Trial</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="trialLineEdit"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="timePointLineEdit"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="mouseIDLineEdit"/>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="dayLineEdit"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="timePointLabel">
+            <property name="text">
+             <string>Time Point [month]</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="mouseIDLabel">
+            <property name="text">
+             <string>Mouse ID</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="3">
+           <widget class="QPushButton" name="trialInfoButton">
+            <property name="text">
+             <string>Confirm Trial Information</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="8" column="0" colspan="7">
+        <widget class="QPushButton" name="runAnalysisButton">
+         <property name="text">
+          <string>Run Video Analysis</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="7">
+        <widget class="QPushButton" name="setWorkingDirectoryButton">
+         <property name="text">
+          <string>Set Working Directory</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0" colspan="7">
+        <widget class="QGroupBox" name="headTailCheckGroupBox">
+         <property name="title">
+          <string>Head / Tail Check</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_9">
+          <item row="0" column="1">
+           <widget class="QPushButton" name="headTailYes">
+            <property name="text">
+             <string>Yes</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="headTailNo">
+            <property name="text">
+             <string>No</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="headTailCheckLabel">
+            <property name="text">
+             <string>Did the software determine the head and tail correctly?</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="saveTab">
+      <attribute name="title">
+       <string>Save Session</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QTableWidget" name="saveSessionTable">
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="verticalHeaderCascadingSectionResizes">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>50</number>
+         </attribute>
+         <attribute name="verticalHeaderMinimumSectionSize">
+          <number>18</number>
+         </attribute>
+         <column>
+          <property name="text">
+           <string>Input Video</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Mouse ID</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Time Point</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Day</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Trial</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Target Hole</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Manual End (T/F)</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>User Swap (T/F)</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Frame Count</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Output Video</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Output Results File</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="saveSessionButton">
+         <property name="text">
+          <string>Save Session</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="loadTab">
+      <attribute name="title">
+       <string>Load Session</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_7">
+       <item row="2" column="0" rowspan="3">
+        <widget class="QGroupBox" name="videoAnalysisParametersGroupBox_2">
+         <property name="title">
+          <string>Video Analysis Parameters</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_24">
+          <item row="2" column="3">
+           <widget class="QGroupBox" name="ekfGroupBox_2">
+            <property name="title">
+             <string>Extended Kalman Filter</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_25">
+             <item row="0" column="0">
+              <widget class="QLabel" name="KALMAN_UPDATE_PARAM_LABEL_2">
+               <property name="text">
+                <string>KALMAN_UPDATE_PARAM</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="KALMAN_UPDATE_PARAM_INPUT_2">
+               <property name="text">
+                <string>15</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QGroupBox" name="cornerDetectionGroupBox_2">
+            <property name="title">
+             <string>Shi Tomasi Corner Detection (Head/Tail)</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_26">
+             <item row="0" column="2">
+              <widget class="QLineEdit" name="MAX_CORNERS_INPUT_2">
+               <property name="text">
+                <string>3</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLineEdit" name="MIN_DISTANCE_INPUT_2">
+               <property name="text">
+                <string>7</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="QUALITY_LEVEL_LABEL_2">
+               <property name="text">
+                <string>QUALITY_LEVEL</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="MIN_DISTANCE_LABEL_2">
+               <property name="text">
+                <string>MIN_DISTANCE</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="MAX_CORNERS_LABEL_2">
+               <property name="text">
+                <string>MAX_CORNERS</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="BLOCK_SIZE_LABEL_2">
+               <property name="text">
+                <string>BLOCK_SIZE</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLineEdit" name="QUALITY_LEVEL_INPUT_2">
+               <property name="text">
+                <string>0.1</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QLineEdit" name="BLOCK_SIZE_INPUT_2">
+               <property name="text">
+                <string>10</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QGroupBox" name="mouseSegmentationGroupBox_2">
+            <property name="title">
+             <string>Mouse Segmentation</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_27">
+             <item row="0" column="0">
+              <widget class="QLabel" name="HOLE_MASK_FACTOR_LABEL_2">
+               <property name="text">
+                <string>HOLE_MASK_FACTOR</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="PREV_DIST_LIM_2_LABEL_2">
+               <property name="text">
+                <string>PREV_DIST_LIM_2</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="PREV_DIST_LIM_1_LABEL_2">
+               <property name="text">
+                <string>PREV_DIST_LIM_1</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="PREV_DIST_LIM_1_INPUT_2">
+               <property name="text">
+                <string>20</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="HOLE_MASK_FACTOR_INPUT_2">
+               <property name="text">
+                <string>2</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLineEdit" name="RESET_THRESH_INPUT_2">
+               <property name="text">
+                <string>10</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="RESET_THRES_LABEL_2">
+               <property name="text">
+                <string>RESET_THRESH</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="PREV_DIST_LIM_2_INPUT_2">
+               <property name="text">
+                <string>210</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QGroupBox" name="holeActivationGroupBox_2">
+            <property name="title">
+             <string>Hole Activation</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_28">
+             <item row="0" column="0">
+              <widget class="QLabel" name="RANGE_FOR_ACTIVATION_LABEL_2">
+               <property name="text">
+                <string>RANGE_FOR_ACTIVATION</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="RANGE_FOR_ACTIVATION_INPUT_2">
+               <property name="text">
+                <string>0.4</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QGroupBox" name="groupBox_9">
+            <property name="title">
+             <string>Hole Detection</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_29">
+             <item row="0" column="0">
+              <widget class="QLabel" name="MIN_RADIUS_HOLE_LABEL_2">
+               <property name="text">
+                <string>MIN_RADIUS_HOLE</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="MIN_RADIUS_HOLE_INPUT_2">
+               <property name="text">
+                <string>10</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="MAX_RADIUS_HOLE_LABEL_2">
+               <property name="text">
+                <string>MAX_RADIUS_HOLE</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="MAX_RADIUS_HOLE_INPUT_2">
+               <property name="text">
+                <string>17</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="HOLE_DIAMETER_LABEL_2">
+               <property name="text">
+                <string>HOLE_DIAMETER [cm]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="HOLE_DIAMETER_INPUT_2">
+               <property name="text">
+                <string>5</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QGroupBox" name="tableDetectionGroupBox_2">
+            <property name="title">
+             <string>Table Detection</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_30">
+             <item row="1" column="0">
+              <widget class="QLabel" name="DILATE_KERNEL_WIDTH_LABEL_2">
+               <property name="text">
+                <string>DILATE_KERNEL_WIDTH</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="DILATE_KERNEL_HEIGHT_LABEL_2">
+               <property name="text">
+                <string>DILATE_KERNEL_HEIGHT</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="DILATE_KERNEL_WIDTH_INPUT_2">
+               <property name="text">
+                <string>7</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="DILATE_KERNEL_HEIGHT_INPUT_2">
+               <property name="text">
+                <string>7</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="2" colspan="2">
+           <widget class="QGroupBox" name="blurringKernelGroupBox_2">
+            <property name="title">
+             <string>Blurring Kernel</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_31">
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="BLUR_KERNEL_WIDTH_INPUT_2">
+               <property name="text">
+                <string>10</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="BLUR_KERNEL_WIDTH_LABEL_2">
+               <property name="text">
+                <string>BLUR_KERNEL_WIDTH</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="BLUR_KERNEL_HEIGHT_LABEL_2">
+               <property name="text">
+                <string>BLUR_KERNEL_HEIGHT</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLineEdit" name="BLUR_KERNEL_HEIGHT_INPUT_2">
+               <property name="text">
+                <string>10</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="4" column="2" colspan="2">
+           <widget class="QPushButton" name="confirmAnalysisParametersButton_2">
+            <property name="text">
+             <string>Confirm Video Analysis Parameters</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="2">
+        <widget class="QPushButton" name="runAnalysesButton">
+         <property name="text">
+          <string>Run Video Analyses</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="loadSessionGroupBox">
+         <property name="title">
+          <string>Load Session File(s)</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="loadSessionButton">
+            <property name="text">
+             <string>Load Session(s)</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QGroupBox" name="sessionInfoGroupBox">
+         <property name="title">
+          <string>Session Information</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QTableWidget" name="loadSessionTable">
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderCascadingSectionResizes">
+             <bool>true</bool>
+            </attribute>
+            <attribute name="verticalHeaderDefaultSectionSize">
+             <number>50</number>
+            </attribute>
+            <attribute name="verticalHeaderMinimumSectionSize">
+             <number>18</number>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Input Video</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Mouse ID</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Time Point</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Day</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Trial</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Target Hole</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Manual End (T/F)</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>User Swap (T/F)</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Frame Count</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Output Video</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Output Results File</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="summarizeTab">
+      <attribute name="title">
+       <string>Summarize Results</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <widget class="QTextBrowser" name="summarizeResultsInfo">
+         <property name="html">
+          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Information:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Results will be loaded from the &amp;quot;results&amp;quot; folder. Each mouse analyzed through this program has its own sub-folder within the &amp;quot;results&amp;quot; folder.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;You may select multiple mice by listing them in the &amp;quot;Mouse ID(s)&amp;quot; box (use commas to separate ID(s), no spaces). However, you can only specify one specific timepoint. Specify the testing days in the same manner as the mouse IDs. Be sure to specify the number of trials performed during each testing day, again in the same manner as the mouse IDs.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Example:&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Mouse ID(s): c2, c3, c4, c5&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Time Point [month]: 6&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Days: 1, 2, 3, 4, 5&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Trials Per Day: 4, 4, 4, 4, 1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QGroupBox" name="testingInformationGroupBox">
+         <property name="title">
+          <string>Testing Information</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QLabel" name="mouseIDsLabel">
+            <property name="text">
+             <string>Mouse ID(s)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="mouseIDsLineEdit"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="timePointLabel_summarize">
+            <property name="text">
+             <string>Time Point [month]</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="timePointLineEdit_summarize"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="dayLabel_summarize">
+            <property name="text">
+             <string>Days</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="dayLineEdit_summarize"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="numTrialsLabel">
+            <property name="text">
+             <string>Number of Trials Performed Per Day</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="numTrialsLineEdit"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="testingInformationButton">
+            <property name="text">
+             <string>Confirm Trial Information</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QPushButton" name="summarizeResultsButton">
+         <property name="text">
+          <string>Summarize Results</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>setWorkingDirectoryButton</tabstop>
+  <tabstop>loadVideoFilename</tabstop>
+  <tabstop>loadVideoButton</tabstop>
+  <tabstop>mouseIDLineEdit</tabstop>
+  <tabstop>timePointLineEdit</tabstop>
+  <tabstop>dayLineEdit</tabstop>
+  <tabstop>trialLineEdit</tabstop>
+  <tabstop>trialInfoButton</tabstop>
+  <tabstop>BLUR_KERNEL_WIDTH_INPUT</tabstop>
+  <tabstop>BLUR_KERNEL_HEIGHT_INPUT</tabstop>
+  <tabstop>HOLE_MASK_FACTOR_INPUT</tabstop>
+  <tabstop>PREV_DIST_LIM_1_INPUT</tabstop>
+  <tabstop>PREV_DIST_LIM_2_INPUT</tabstop>
+  <tabstop>RESET_THRESH_INPUT</tabstop>
+  <tabstop>MAX_CORNERS_INPUT</tabstop>
+  <tabstop>QUALITY_LEVEL_INPUT</tabstop>
+  <tabstop>MIN_DISTANCE_INPUT</tabstop>
+  <tabstop>BLOCK_SIZE_INPUT</tabstop>
+  <tabstop>RANGE_FOR_ACTIVATION_INPUT</tabstop>
+  <tabstop>TARGET_HOLE_ACTIVITY_INPUT</tabstop>
+  <tabstop>KALMAN_UPDATE_PARAM_INPUT</tabstop>
+  <tabstop>MIN_RADIUS_HOLE_INPUT</tabstop>
+  <tabstop>MAX_RADIUS_HOLE_INPUT</tabstop>
+  <tabstop>HOLE_DIAMETER_INPUT</tabstop>
+  <tabstop>DILATE_KERNEL_WIDTH_INPUT</tabstop>
+  <tabstop>DILATE_KERNEL_HEIGHT_INPUT</tabstop>
+  <tabstop>confirmAnalysisParametersButton</tabstop>
+  <tabstop>checkTargetBoxButton</tabstop>
+  <tabstop>specifyTargetBoxLineEdit</tabstop>
+  <tabstop>specifyTargetBoxButton</tabstop>
+  <tabstop>headTailYes</tabstop>
+  <tabstop>headTailNo</tabstop>
+  <tabstop>runAnalysisButton</tabstop>
+  <tabstop>saveSessionTable</tabstop>
+  <tabstop>saveSessionButton</tabstop>
+  <tabstop>loadSessionTable</tabstop>
+  <tabstop>loadSessionButton</tabstop>
+  <tabstop>BLUR_KERNEL_WIDTH_INPUT_2</tabstop>
+  <tabstop>BLUR_KERNEL_HEIGHT_INPUT_2</tabstop>
+  <tabstop>HOLE_MASK_FACTOR_INPUT_2</tabstop>
+  <tabstop>PREV_DIST_LIM_1_INPUT_2</tabstop>
+  <tabstop>PREV_DIST_LIM_2_INPUT_2</tabstop>
+  <tabstop>RESET_THRESH_INPUT_2</tabstop>
+  <tabstop>MAX_CORNERS_INPUT_2</tabstop>
+  <tabstop>QUALITY_LEVEL_INPUT_2</tabstop>
+  <tabstop>MIN_DISTANCE_INPUT_2</tabstop>
+  <tabstop>BLOCK_SIZE_INPUT_2</tabstop>
+  <tabstop>RANGE_FOR_ACTIVATION_INPUT_2</tabstop>
+  <tabstop>KALMAN_UPDATE_PARAM_INPUT_2</tabstop>
+  <tabstop>MIN_RADIUS_HOLE_INPUT_2</tabstop>
+  <tabstop>MAX_RADIUS_HOLE_INPUT_2</tabstop>
+  <tabstop>HOLE_DIAMETER_INPUT_2</tabstop>
+  <tabstop>DILATE_KERNEL_HEIGHT_INPUT_2</tabstop>
+  <tabstop>DILATE_KERNEL_WIDTH_INPUT_2</tabstop>
+  <tabstop>confirmAnalysisParametersButton_2</tabstop>
+  <tabstop>runAnalysesButton</tabstop>
+  <tabstop>summarizeResultsInfo</tabstop>
+  <tabstop>mouseIDsLineEdit</tabstop>
+  <tabstop>timePointLineEdit_summarize</tabstop>
+  <tabstop>dayLineEdit_summarize</tabstop>
+  <tabstop>numTrialsLineEdit</tabstop>
+  <tabstop>testingInformationButton</tabstop>
+  <tabstop>summarizeResultsButton</tabstop>
+  <tabstop>consoleOutputText</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
