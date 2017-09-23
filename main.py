@@ -93,6 +93,11 @@ class Hole:
 			else:
 				self.numFramesPrimary = self.numFramesPrimary + 1
 
+class Table:
+	def __init__(self, center, radius):
+		self.center = center
+		self.radius = radius
+
 class Mouse:
 	def __init__(self):
 		
@@ -158,6 +163,19 @@ class Mouse:
 		# print ''
 
 		return path_length
+
+	def getPath(self, point):
+		if point == 'head':
+			# then track the tail, because my code is fucked up and it tracks the tail as the head most of the time
+			path = self.tail
+		elif point == 'tail':
+			# then track the head, because, once again, my code is fucked up and it tracks the head as the tail most of the time
+			path = self.head
+		else:
+			# track the center in all other cases
+			path = self.center
+
+		return path
 
 	def getProxToTarget(self, point, target, pixel_to_cm):
 		prox_to_target = []
@@ -447,7 +465,18 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 		
 		self.circle_img = cv2.bitwise_not(cv2.bitwise_not(frame_floodfill) | frame_binary)
 		self.circle_img = cv2.dilate(self.circle_img, np.ones((self.DILATE_KERNEL_WIDTH, self.DILATE_KERNEL_HEIGHT),np.uint8), iterations=1)
+
 		# cv2.imshow('circle_img', self.circle_img)
+
+		contour_image = cv2.bitwise_not(self.circle_img.copy())
+		image, contours, hierarchy = cv2.findContours(contour_image,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+
+		# fitting circle to table
+		cnt = max(contours, key = cv2.contourArea)
+		(x,y), radius = cv2.minEnclosingCircle(cnt)
+		center = (int(x), int(y))
+		radius = int(radius)
+		self.table = Table(center, radius)
 
 		# apply table mask
 		self.frame_masked = cv2.bitwise_or(frame_binary, self.circle_img)
@@ -498,6 +527,9 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 					(hole.center[0]+15, hole.center[1]+15),
 					cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 0), 2)
 			self.output = cv2.circle(self.output, (hole.center[0], hole.center[1]), hole.radius,(0,255,0),1)
+
+		# draw table on frame
+		self.output = cv2.circle(self.output, (self.table.center[0], self.table.center[1]), self.table.radius, (255,255,0), 1)
 
 		cv2.imshow(self.mouse.id, self.output)
 
@@ -611,8 +643,9 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 
 		# find head and tail using corner detection
 		p0 = cv2.goodFeaturesToTrack(input_frame, mask=None, **self.FEATURE_PARAMS)
+		p0 = np.array(p0)
 
-		if not(p0 == None) and len(p0) > 1: # (both head and tail found)
+		if not(p0.any() == None) and len(p0) > 1: # (both head and tail found)
 
 			head = (p0[0][0][0], p0[0][0][1])
 			tail = (p0[1][0][0], p0[1][0][1])
@@ -859,6 +892,9 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 					self.target_hole_activity = 0
 					self.target_hole_end = False
 
+				# draw table on frame
+				self.output = cv2.circle(self.output, (self.table.center[0], self.table.center[1]), self.table.radius, (255,255,0), 1)
+
 				cv2.imshow(self.mouse.id, self.output)
 				if not(self.RUN_MULTIPLE): cv2.waitKey(1)
 
@@ -1082,6 +1118,29 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 		self.consoleOutputText.append('')
 
 		self.addToSession()
+
+		# Write information for post-hoc registering of table and paths.
+		
+		#  | whole path
+		output_path_txt = open(self.output_filename_txt.replace('.txt', '_path.txt'), 'w')
+		path = self.mouse.getPath('center')
+		for i in range(1,len(path)):
+			output_path_txt.write(str(path[i][0]) + ',' + str(path[i][1]) + '\n')
+		output_path_txt.close()
+		
+		#  | target location
+		output_target_txt = open(self.output_filename_txt.replace('.txt', '_target.txt'), 'w')
+		output_target_txt.write(str(self.target_hole.center[0]) + ',' + str(self.target_hole.center[1]) + '\n')
+		output_target_txt.write(str(self.target_hole.radius) + '\n')
+		output_target_txt.write(str(self.PIXEL_TO_CM))
+		output_target_txt.close()
+
+		#  | table location
+		output_table_txt = open(self.output_filename_txt.replace('.txt', '_table.txt'), 'w')
+		output_table_txt.write(str(self.table.center[0]) + ',' + str(self.table.center[1]) + '\n')
+		output_table_txt.write(str(self.table.radius) + '\n')
+		output_table_txt.write(str(self.PIXEL_TO_CM))
+		output_table_txt.close()
 
 		self.cap.release()
 		self.out.release()
