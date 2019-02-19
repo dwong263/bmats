@@ -107,6 +107,7 @@ class Mouse:
 		self.center = []
 		self.head = []
 		self.tail = []
+		self.contours = []
 
 		# estimated positions
 		self.center_k = []
@@ -124,13 +125,10 @@ class Mouse:
 		self.tail_track_reset = 0
 
 	def getNearestHole(self, holes, point):
-
 		if point == 'head':
-			# then track the tail, because my code is fucked up and it tracks the tail as the head most of the time
-			tracking_point = self.tail_k[-1]
-		elif point == 'tail':
-			# then track the head, because, once again, my code is fucked up and it tracks the head as the tail most of the time
 			tracking_point = self.head_k[-1]
+		elif point == 'tail':
+			tracking_point = self.tail_k[-1]
 		else:
 			# track the center in all other cases
 			tracking_point = self.center_k[-1]
@@ -146,11 +144,9 @@ class Mouse:
 	def getPathLength(self, point, pixel_to_cm):
 		path_length = 0
 		if point == 'head':
-			# then track the tail, because my code is fucked up and it tracks the tail as the head most of the time
-			path = self.tail
-		elif point == 'tail':
-			# then track the head, because, once again, my code is fucked up and it tracks the head as the tail most of the time
 			path = self.head
+		elif point == 'tail':
+			path = self.tail
 		else:
 			# track the center in all other cases
 			path = self.center
@@ -166,11 +162,9 @@ class Mouse:
 
 	def getPath(self, point):
 		if point == 'head':
-			# then track the tail, because my code is fucked up and it tracks the tail as the head most of the time
-			path = self.tail
-		elif point == 'tail':
-			# then track the head, because, once again, my code is fucked up and it tracks the head as the tail most of the time
 			path = self.head
+		elif point == 'tail':
+			path = self.tail
 		else:
 			# track the center in all other cases
 			path = self.center
@@ -180,11 +174,9 @@ class Mouse:
 	def getProxToTarget(self, point, target, pixel_to_cm):
 		prox_to_target = []
 		if point == 'head':
-			# then track the tail, because my code is fucked up and it tracks the tail as the head most of the time
-			path = self.tail
-		elif point == 'tail':
-			# then track the head, because, once again, my code is fucked up and it tracks the head as the tail most of the time
 			path = self.head
+		elif point == 'tail':
+			path = self.tail
 		else:
 			# track the center in all other cases
 			path = self.center
@@ -465,10 +457,9 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 		
 		self.circle_img = cv2.bitwise_not(cv2.bitwise_not(frame_floodfill) | frame_binary)
 		self.circle_img = cv2.dilate(self.circle_img, np.ones((self.DILATE_KERNEL_WIDTH, self.DILATE_KERNEL_HEIGHT),np.uint8), iterations=1)
+		self.circle_img_orig = self.circle_img.copy()
 
-		# cv2.imshow('circle_img', self.circle_img)
-
-		contour_image = cv2.bitwise_not(self.circle_img.copy())
+		contour_image = cv2.bitwise_not(self.circle_img_orig)
 		image, contours, hierarchy = cv2.findContours(contour_image,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
 
 		# fitting circle to table
@@ -478,10 +469,22 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 		radius = int(radius)
 		self.table = Table(center, radius)
 
-		# apply table mask
-		self.frame_masked = cv2.bitwise_or(frame_binary, self.circle_img)
+		# replace circle image with one generated from the fitted circle
+		self.circle_img = np.ones((h,w), np.uint8)*0
+		cv2.circle(self.circle_img, self.table.center, int(self.table.radius*0.99), (255,255,255),-1)
+		# cv2.imshow('circle_img', self.circle_img)
+		
+		self.circle_img_inv = np.ones((h,w),np.uint8)*255
+		cv2.circle(self.circle_img_inv, self.table.center, int(self.table.radius*0.97), (0,0,0),-1)
+		# cv2.imshow('circle_img_inv', self.circle_img_inv)
 
-		# cv2.imshow('frame_masked', self.frame_masked)
+		# apply table mask
+		self.frame_masked = cv2.bitwise_or(frame_binary, self.circle_img_orig)
+		self.frame_masked = cv2.bitwise_and(self.frame_masked, self.circle_img)
+		# cv2.imshow('frame_masked_1', self.frame_masked)
+		self.frame_masked = cv2.bitwise_or(self.frame_masked, self.circle_img_inv)
+		# cv2.imshow('frame_binary', frame_binary)
+		# cv2.imshow('frame_masked_2', self.frame_masked)
 
 		# segment holes
 		contour_image = self.frame_masked.copy()
@@ -522,14 +525,44 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 			element[1].number = (i-5)%20 if np.abs(i-5) > 0 else 20
 
 		# draw holes on frame
+		centroid = np.array((0,0))
 		for hole in self.holes:
 			cv2.putText(self.output, "{}".format(hole.number),
 					(hole.center[0]+15, hole.center[1]+15),
 					cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 0), 2)
 			self.output = cv2.circle(self.output, (hole.center[0], hole.center[1]), hole.radius,(0,255,0),1)
+			centroid = centroid + np.array((hole.center[0],hole.center[1]))
+		centroid = centroid / np.size(self.holes); centroid = (int(np.round(centroid[0])), int(np.round(centroid[1])))
+
+		# # replace segmented table with estimated table based on hole locations
+		# center = centroid; radius = self.table.radius #int(hole.radius * (80./5.))
+		# print center, radius, self.table.center, self.table.radius
+		# self.table = Table(center, radius)
+
+		# recenter table based on hole locations
+		self.table.center = centroid
 
 		# draw table on frame
 		self.output = cv2.circle(self.output, (self.table.center[0], self.table.center[1]), self.table.radius, (255,255,0), 1)
+		# draw estimated table center on frame
+		self.output = cv2.circle(self.output, (self.table.center[0], self.table.center[1]), 4, (255, 255, 0), -1)
+
+		# replace circle image with one generated from the fitted circle
+		self.circle_img = np.ones((h,w), np.uint8)*0
+		cv2.circle(self.circle_img, self.table.center, int(self.table.radius*0.99), (255,255,255),-1)
+		# cv2.imshow('circle_img', self.circle_img)
+		
+		self.circle_img_inv = np.ones((h,w),np.uint8)*255
+		cv2.circle(self.circle_img_inv, self.table.center, int(self.table.radius*0.97), (0,0,0),-1)
+		# cv2.imshow('circle_img_inv', self.circle_img_inv)
+
+		# apply table mask
+		self.frame_masked = cv2.bitwise_or(frame_binary, self.circle_img_orig)
+		self.frame_masked = cv2.bitwise_and(self.frame_masked, self.circle_img)
+		# cv2.imshow('frame_masked_1', self.frame_masked)
+		self.frame_masked = cv2.bitwise_or(self.frame_masked, self.circle_img_inv)
+		# cv2.imshow('frame_binary', frame_binary)
+		# cv2.imshow('frame_masked_2', self.frame_masked)
 
 		cv2.imshow(self.mouse.id, self.output)
 
@@ -573,6 +606,10 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 		self.runAnalysisButton.setEnabled(True)
 
 	def segmentMouse(self, mouse, holes, input_frame, output_frame, frame_count):
+		
+		cv2.imshow(mouse.id + '_binary', input_frame)
+		# if frame_count == 5:
+		# 	cv2.imwrite('images/' + mouse.id + '_binary.jpg', input_frame)
 
 		#1. Find mouse contour.
 
@@ -629,6 +666,9 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 			# draw mouse on frame
 			output_frame = cv2.drawContours(output_frame, largest_contour, -1, (255,0,0), 2)
 
+			# add contour object to list for posthoc tracking analysis
+			mouse.contours.append(largest_contour)
+
 		else:
 
 			if frame_count == 1:
@@ -647,8 +687,35 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 
 		if not(p0.any() == None) and len(p0) > 1: # (both head and tail found)
 
-			head = (p0[0][0][0], p0[0][0][1])
-			tail = (p0[1][0][0], p0[1][0][1])
+			try:
+				# find tail using distance from centroid
+				dists_to_centroid = []
+				for point in largest_contour:
+					# calculate distance to centroid
+					dists_to_centroid.append(np.sqrt((point[0][0]-mouse_x)**2 + (point[0][1]-mouse_y)**2))
+				# greatest distance to centroid is the tail
+				tail = largest_contour[dists_to_centroid.index(max(dists_to_centroid))]
+				tail = (tail[0][0], tail[0][1])
+
+				# find head using distance from tail
+				dists_to_tail = []
+				for point in largest_contour:
+					# calculate distance to tail
+					dists_to_tail.append(np.sqrt((point[0][0]-tail[0])**2 + (point[0][1]-tail[1])**2))
+				head = largest_contour[dists_to_tail.index(max(dists_to_tail))]
+				head = (head[0][0], head[0][1])
+
+				# swap
+				# tmp = head
+				# head = tail
+				# tail = tmp
+
+			except Exception as e:
+				# if largest contour can't be found, use corner detection instead
+				print e
+				print "Using corner detection instead"
+				head = (p0[0][0][0], p0[0][0][1])
+				tail = (p0[1][0][0], p0[1][0][1])
 
 			if frame_count == 1: # (first frame, nothing to compare to, so initialize head and tail position)
 				# # ask user if head and tail are selected for properly (no way for software to know)
@@ -666,21 +733,30 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 				mouse.head.append(head)
 				mouse.tail.append(tail)
 
+				self.PREV_DIST_LIM_1 = int(np.sqrt((head[0]-mouse_x)**2 + (head[1]-mouse_y)**2)/2)
+				self.PREV_DIST_LIM_2 = self.table.radius
+
+				self.PREV_DIST_LIM_1_INPUT.setText(str(self.PREV_DIST_LIM_1))
+				self.PREV_DIST_LIM_1_INPUT_2.setText(str(self.PREV_DIST_LIM_1))
+
+				self.PREV_DIST_LIM_2_INPUT.setText(str(self.PREV_DIST_LIM_2))
+				self.PREV_DIST_LIM_2_INPUT_2.setText(str(self.PREV_DIST_LIM_2))
+
 			else: # (not the first frame, check to make sure spurious detections are not used)
 
-				# 1a. SWAP CHECK
-				distance_head_to_prev_head = np.sqrt((head[0]-mouse.head[-1][0])**2 + (head[1]-mouse.head[-1][1])**2)
-				distance_tail_to_prev_head = np.sqrt((tail[0]-mouse.head[-1][0])**2 + (tail[1]-mouse.head[-1][1])**2)
-				if distance_head_to_prev_head > distance_tail_to_prev_head: 
-					# (if distance of current head position to previous head position is greater, probably means a swap has occured)
-					# so swap back:
-					tmp = head
-					head = tail
-					tail = tmp
-					# self.consoleOutputText.append('   head and tail swap (auto), ',)
-				else:
-					# self.consoleOutputText.append('no head and tail swap (auto), ',)
-					pass
+				# # 1a. SWAP CHECK
+				# distance_head_to_prev_head = np.sqrt((head[0]-mouse.head[-1][0])**2 + (head[1]-mouse.head[-1][1])**2)
+				# distance_tail_to_prev_head = np.sqrt((tail[0]-mouse.head[-1][0])**2 + (tail[1]-mouse.head[-1][1])**2)
+				# if distance_head_to_prev_head > distance_tail_to_prev_head: 
+				# 	# (if distance of current head position to previous head position is greater, probably means a swap has occured)
+				# 	# so swap back:
+				# 	tmp = head
+				# 	head = tail
+				# 	tail = tmp
+				# 	# self.consoleOutputText.append('   head and tail swap (auto), ',)
+				# else:
+				# 	# self.consoleOutputText.append('no head and tail swap (auto), ',)
+				# 	pass
 
 				fhead = head
 				ftail = tail
@@ -735,14 +811,15 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 				else:
 					mouse.tail_track_reset = 0
 
-				# 6. USER SWAP CHECK
-				if self.USER_SWAP == True and frame_count == 2:
-					tmp = fhead
-					fhead = ftail
-					ftail = tmp
+				# ignore USER_SWAP parameter (program should now robustly detect head and tail)
+				# # 6. USER SWAP CHECK
+				# if self.USER_SWAP == True and frame_count == 2:
+				# 	tmp = fhead
+				# 	fhead = ftail
+				# 	ftail = tmp
 				
-				if frame_count == 2:
-					self.consoleOutputText.append('USER_SWAP = ' + str(self.USER_SWAP))
+				# if frame_count == 2:
+				# 	self.consoleOutputText.append('USER_SWAP = ' + str(self.USER_SWAP))
 
 				mouse.head.append(fhead)
 				mouse.tail.append(ftail)
@@ -780,16 +857,14 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 
 		output_frame = cv2.circle(output_frame, tuple(estimated_tail), 4, (0, 0, 255), -1)
 
-		# somehow, my tracking algorithm seems to track the tail as the head most of the time (so I've swapped the display here)
-		# WTF?????
-		output_frame = cv2.putText(output_frame, "H",
+		output_frame = cv2.putText(output_frame, "T",
 						(estimated_tail[0]+10, estimated_tail[1]+10),
 						cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 1)
-		output_frame = cv2.polylines(output_frame, [np.int32(mouse.tail)], isClosed=False, color=(96,96,96))
 
-		output_frame = cv2.putText(output_frame, "T",
+		output_frame = cv2.putText(output_frame, "H",
 							(estimated_head[0]+10, estimated_head[1]+10),
 							cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 1)
+		output_frame = cv2.polylines(output_frame, [np.int32(mouse.head)], isClosed=False, color=(96,96,96))
 
 		# self.consoleOutputText.append(mouse.center_track_reset, mouse.head_track_reset, mouse.tail_track_reset,)
 
@@ -845,7 +920,9 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 				ret_binary, frame_binary = cv2.threshold(frame_blur,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
 				# apply table mask
-				frame_masked = cv2.bitwise_or(frame_binary, self.circle_img)
+				frame_masked = cv2.bitwise_or(frame_binary, self.circle_img_orig)
+				frame_masked = cv2.bitwise_and(frame_masked, self.circle_img)
+				frame_masked = cv2.bitwise_or(frame_masked, self.circle_img_inv)
 
 				# draw holes on frame
 				for hole in self.holes:
@@ -894,6 +971,8 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 
 				# draw table on frame
 				self.output = cv2.circle(self.output, (self.table.center[0], self.table.center[1]), self.table.radius, (255,255,0), 1)
+				# draw estimated table center on frame
+				self.output = cv2.circle(self.output, (self.table.center[0], self.table.center[1]), 4, (255, 255, 0), -1)
 
 				cv2.imshow(self.mouse.id, self.output)
 				if not(self.RUN_MULTIPLE): cv2.waitKey(1)
@@ -902,6 +981,8 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 
 			else:
 				break
+
+		cv2.imwrite('images/' + self.mouse.id + '_output.jpg', self.output)
 
 		self.outputResults()
 
@@ -969,7 +1050,8 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 			self.runAnalysisButton.setEnabled(True)
 
 			# 6. check user swap and run video analysis
-			self.USER_SWAP = True if str(self.loadSessionTable.item(i,7).text()) == 'True' else False
+			# self.USER_SWAP = True if str(self.loadSessionTable.item(i,7).text()) == 'True' else False
+			self.USER_SWAP = False # ignore USER_SWAP parameter (program should now robustly detect head and tail)
 			self.runSingleVideoAnalysis()
 
 		self.loadVideoButton.setEnabled(False)
@@ -1127,6 +1209,21 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 		for i in range(1,len(path)):
 			output_path_txt.write(str(path[i][0]) + ',' + str(path[i][1]) + '\n')
 		output_path_txt.close()
+
+		#  | mouse contours
+		output_mouse_txt = open(self.output_filename_txt.replace('.txt', '_mouse-path.txt'), 'w')
+		for cnt in self.mouse.contours:
+			# find bounding box of contour
+			x,y,w,h = cv2.boundingRect(cnt)
+			xmin = x; xmax = x+w+1
+			ymin = y; ymax = y+w+1
+			# for every point in bounding box, check if it lies inside/on the contour
+			for px in range(xmin, xmax):
+				for py in range (ymin, ymax):
+					if cv2.pointPolygonTest(cnt, (px,py), False) >= 0:
+						# if point lies inside/on contour, record it
+						output_mouse_txt.write(str(px) + ',' + str(py) + '\n')
+		output_mouse_txt.close()
 		
 		#  | target location
 		output_target_txt = open(self.output_filename_txt.replace('.txt', '_target.txt'), 'w')
