@@ -277,6 +277,10 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 		self.MOUSE_NAME = ''
 		self.TARGET = 0
 
+		test = open(self.vid_filename, 'r')
+		print "Processing", self.vid_filename, '\n   ',
+		test.close()
+
 		self.cap = cv2.VideoCapture(str(self.vid_filename))
 		self.fps = self.cap.get(cv2.CAP_PROP_FPS)
 		self.spf = (1/self.fps) * 2 
@@ -607,7 +611,7 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 
 	def segmentMouse(self, mouse, holes, input_frame, output_frame, frame_count):
 		
-		cv2.imshow(mouse.id + '_binary', input_frame)
+		# cv2.imshow(mouse.id + '_binary', input_frame)
 		# if frame_count == 5:
 		# 	cv2.imwrite('images/' + mouse.id + '_binary.jpg', input_frame)
 
@@ -887,6 +891,9 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 		self.confirmAnalysisParametersButton_2.setEnabled(False)
 		self.runAnalysesButton.setEnabled(False)
 
+		if self.RUN_MULTIPLE:
+			cv2.destroyAllWindows()
+
 		while(self.cap.isOpened()):
 			ret, frame = self.cap.read()
 			self.frame_count = self.frame_count + 1
@@ -974,8 +981,9 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 				# draw estimated table center on frame
 				self.output = cv2.circle(self.output, (self.table.center[0], self.table.center[1]), 4, (255, 255, 0), -1)
 
-				cv2.imshow(self.mouse.id, self.output)
-				if not(self.RUN_MULTIPLE): cv2.waitKey(1)
+				if not(self.RUN_MULTIPLE):
+					cv2.imshow(self.mouse.id, self.output)
+					cv2.waitKey(1)
 
 				self.out.write(self.output)
 
@@ -993,8 +1001,6 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 		self.runAnalysesButton.setEnabled(True)
 
 	def runMultipleVideoAnalysis(self):
-
-		self.RUN_MULTIPLE = True
 
 		for i in range(0,self.loadSessionTable.rowCount()):
 
@@ -1052,6 +1058,7 @@ class MyApp(QtWidgets.QWidget, Ui_MainWindow):
 			# 6. check user swap and run video analysis
 			# self.USER_SWAP = True if str(self.loadSessionTable.item(i,7).text()) == 'True' else False
 			self.USER_SWAP = False # ignore USER_SWAP parameter (program should now robustly detect head and tail)
+			self.RUN_MULTIPLE = True
 			self.runSingleVideoAnalysis()
 
 		self.loadVideoButton.setEnabled(False)
